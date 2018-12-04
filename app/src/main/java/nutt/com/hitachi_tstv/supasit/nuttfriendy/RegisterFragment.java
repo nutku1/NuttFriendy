@@ -132,7 +132,7 @@ public class RegisterFragment extends Fragment {
                 pathImageString = uri.getPath();
             }
 
-            Log.d("4DecV1","Path ==>" + pathImageString); /// แสดง log
+            Log.d("4DecV1", "Path ==>" + pathImageString); /// แสดง log
 
 //            Find name of Image
             String nameImageString = pathImageString.substring(pathImageString.lastIndexOf("/"));
@@ -152,11 +152,30 @@ public class RegisterFragment extends Fragment {
 
             try {
 
-                ftpClient.connect("ftp.androidthai.in.th",21);
-                ftpClient.login("hit@androidthai.in.th","Abc12345");
+                ftpClient.connect("ftp.androidthai.in.th", 21);
+                ftpClient.login("hit@androidthai.in.th", "Abc12345");
                 ftpClient.setType(FTPClient.TYPE_BINARY);
                 ftpClient.changeDirectory("nuutt");
-                ftpClient.upload(file,new UploadListener());
+                ftpClient.upload(file, new UploadListener());
+
+//                Add Values To Server
+                MyConstant myConstant = new MyConstant();
+                AddUserToServerThread addUserToServerThread = new AddUserToServerThread(getActivity());
+                addUserToServerThread.execute(
+                        nameString,  ///1
+                        userString,  ///2
+                        passwordString,   ///3
+                        myConstant.getUrlPreAvata() + nameImageString, ///4
+                        myConstant.getUrlAddUser()); ///5
+
+                String result = addUserToServerThread.get();
+                Log.d("4DecV1", "Result  ==>" + result);
+
+                if (Boolean.parseBoolean(result)) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    myAlert.normalDialog("Cannot Upload","Please try again!!");
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -200,7 +219,6 @@ public class RegisterFragment extends Fragment {
         }
 
     } ///UploadListener
-
 
 
     @Override
