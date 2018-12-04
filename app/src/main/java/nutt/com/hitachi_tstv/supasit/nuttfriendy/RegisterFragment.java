@@ -2,12 +2,15 @@ package nutt.com.hitachi_tstv.supasit.nuttfriendy;
 
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -104,11 +107,31 @@ public class RegisterFragment extends Fragment {
 
         if (aBoolean) {
             myAlert.normalDialog("Non Choose Avatar ???", "Please Choose Avatar");
-        } else if (nameString.isEmpty()|| userString.isEmpty() || passwordString.isEmpty()) {
-            myAlert.normalDialog("Have Space","Please Fill Every Blank");
+        } else if (nameString.isEmpty() || userString.isEmpty() || passwordString.isEmpty()) {
+            myAlert.normalDialog("Have Space", "Please Fill Every Blank");
         } else {
 
-        }
+//            Find Path Choose  Avatar
+            String pathImageString = null;
+            String[] strings = new String[]{MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(uri, strings, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                pathImageString = cursor.getString(index);
+
+            } else {
+                pathImageString = uri.getPath();
+            }
+
+            Log.d("4DecV1","Path ==>" + pathImageString); /// แสดง log
+
+//            Find name of Image
+            String nameImageString = pathImageString.substring(pathImageString.lastIndexOf("/"));
+            Log.d("4DecV1", "Name Image ==>" + nameImageString);
+
+
+        }///IF
 
 
     } ///CheckAndUploadVales
