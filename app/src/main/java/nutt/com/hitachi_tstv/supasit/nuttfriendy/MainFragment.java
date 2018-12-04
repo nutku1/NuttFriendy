@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -66,13 +70,36 @@ public class MainFragment extends Fragment {
         MyAlert myAlert = new MyAlert(getActivity());
         MyConstant myConstant = new MyConstant();
         boolean b = true; //True == user false , False == user true
-
+        String truePassword = null;
+        String nameString = null;
 
         try {
             GetAllDataThread getAllDataThread = new GetAllDataThread(getActivity());
             getAllDataThread.execute(myConstant.getUrlGetAllUser());
             String jsonString = getAllDataThread.get();
             Log.d("4DecV2", "jsonString ==>" + jsonString);
+
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for (int i = 0; i < jsonArray.length(); i += 1) {
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                if (userString.equals(jsonObject.getString("User"))) {
+                    b = false;
+                    truePassword = jsonObject.getString("Password");
+                    nameString = jsonObject.getString("Name");
+                }///IF
+
+            }///FOR
+
+            if (b) {
+                myAlert.normalDialog("User False", "No " + userString + " in my database");
+            } else if (passwordString.equals(truePassword)) {
+                Toast.makeText(getActivity(),"Welcome " + nameString,Toast.LENGTH_SHORT).show();
+            } else {
+                myAlert.normalDialog("Password False" , "Please Try  Again!!");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
