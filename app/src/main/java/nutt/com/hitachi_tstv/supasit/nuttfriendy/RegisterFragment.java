@@ -2,6 +2,9 @@ package nutt.com.hitachi_tstv.supasit.nuttfriendy;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +27,7 @@ public class RegisterFragment extends Fragment {
     //    Explicit
     private boolean aBoolean = true;
     private ImageView imageView;
+    private Uri uri;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -44,7 +48,20 @@ public class RegisterFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK) {
+
             aBoolean = false;
+            uri = data.getData();
+
+            try {
+
+                Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
+                Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, 800, 600, false);
+                imageView.setImageBitmap(bitmap1);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } ///IF
     }
 
