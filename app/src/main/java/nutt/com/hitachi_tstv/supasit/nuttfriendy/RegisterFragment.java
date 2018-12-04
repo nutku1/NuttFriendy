@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
@@ -92,9 +93,23 @@ public class RegisterFragment extends Fragment {
 
         MyAlert myAlert = new MyAlert(getActivity());
 
+//        Get values from Username Check
+        EditText nameEditText = getView().findViewById(R.id.edtName);
+        EditText userEditText = getView().findViewById(R.id.edtUser);
+        EditText passwordEditText = getView().findViewById(R.id.edtPassword);
+
+        String nameString = nameEditText.getText().toString().trim();
+        String userString = userEditText.getText().toString().trim();
+        String passwordString = passwordEditText.getText().toString().trim();
+
         if (aBoolean) {
-            myAlert.normalDialog("Non Choose Avatar ???","Please Choose Avatar");
+            myAlert.normalDialog("Non Choose Avatar ???", "Please Choose Avatar");
+        } else if (nameString.isEmpty()|| userString.isEmpty() || passwordString.isEmpty()) {
+            myAlert.normalDialog("Have Space","Please Fill Every Blank");
+        } else {
+
         }
+
 
     } ///CheckAndUploadVales
 
